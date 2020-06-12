@@ -6,7 +6,7 @@ public class MainClass {
 	public static void main(String[] args) {
 		
 		
-		/////....read from file and encrypt......///// - This is good
+		/////....read from file and encrypt......///// 
 		int sizeOfMessage;
 		AlgorithmRC6 rc6=new AlgorithmRC6();
 		rc6.EncryptFunction();
@@ -15,9 +15,9 @@ public class MainClass {
 		
 		
 		
-		/////....take message and go via hash ......///// -This is good
+		/////....take message and go via hash ......///// 
 		int hashCodeOfMEssage;
-		hashCodeOfMEssage=rc6.original_Text.hashCode();
+		hashCodeOfMEssage=rc6.getOriginal_Text().hashCode();
 		/////....take message and go via hash ....../////
 		
 		
@@ -35,7 +35,7 @@ public class MainClass {
 		/////.... Concatenate the result....../////
 		ArrayList<Byte> bytesToSendQuietlly =new ArrayList<Byte>();
 		//First insert the rc6 encrypted text
-		byte[] encryptedText= rc6.encrypted_text.getBytes();
+		byte[] encryptedText= rc6.getEncrypted_text().getBytes();
 		for(byte info:encryptedText) {
 			bytesToSendQuietlly.add(info);
 		}
@@ -83,10 +83,10 @@ public class MainClass {
 		
 		
 		
-		//decrypt message and go via hash -> Save the value
+		//decrypt message and go via hash
 		rc6.DecryptionFunction();
 		int hashCodeToCompare;
-		String decryptedText=rc6.decrypted_text.substring(0,rc6.decrypted_text.length()-1);
+		String decryptedText=rc6.getDecrypted_text().substring(0,rc6.getDecrypted_text().length()-1);
 		hashCodeToCompare=decryptedText.hashCode();
 		
 		
@@ -102,13 +102,16 @@ public class MainClass {
 			array[j]=encryptedHash.get(j);
 			j++;
 		}
-		
-		
-				//encryptedHash.toArray(new Byte[encryptedHash.size()]);
 		byte[] decrypted = rsa.decrypt(array);
 		String result=new String(decrypted);
 		
-		System.out.println("The hash value from Message is "+hashCodeToCompare+". The hash value from what was sent is "+result);
+		if(hashCodeToCompare==Integer.parseInt(result)) {
+			System.out.println("The Message is Ok\n");
+			System.out.println("The hash value from Message is "+hashCodeToCompare+". The hash value from what was sent is "+result);
+		}else {
+			System.out.println("The Message was tempered");
+		}
+		
 	}
 
 }

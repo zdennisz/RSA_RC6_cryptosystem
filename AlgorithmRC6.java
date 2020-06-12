@@ -1,10 +1,6 @@
-// AMOGH LALE
-//alale1@binghamton.edu
-
 	import java.util.Scanner;
 	import java.io.BufferedReader;
 	import java.io.BufferedWriter;
-	import java.io.FileNotFoundException;
 	import java.io.FileReader;
 	import java.io.FileWriter;
 	import java.io.IOException;
@@ -13,9 +9,43 @@
 		static int w = 32, r = 20;
 		static int[] S;
 		static int Pw = 0xb7e15163, Qw = 0x9e3779b9;
-		public String encrypted_text;
-		public String  decrypted_text;
-		public String original_Text;
+		private String encrypted_text;
+		public String getEncrypted_text() {
+			return encrypted_text;
+		}
+
+
+
+		public void setEncrypted_text(String encrypted_text) {
+			this.encrypted_text = encrypted_text;
+		}
+
+
+
+		public String getDecrypted_text() {
+			return decrypted_text;
+		}
+
+
+
+		public void setDecrypted_text(String decrypted_text) {
+			this.decrypted_text = decrypted_text;
+		}
+
+
+
+		public String getOriginal_Text() {
+			return original_Text;
+		}
+
+
+
+		public void setOriginal_Text(String original_Text) {
+			this.original_Text = original_Text;
+		}
+
+		private String  decrypted_text;
+		private String original_Text;
 		
 		// CODE TO CONVERT HEXADECIMAL NUMBERS IN STRING TO BYTE ARRAY
 		public static byte[] hexStringToByteArray(String s) {
@@ -265,31 +295,28 @@
 			Scanner sc=new Scanner(System.in);
 			FileWriter output_file;
 			try {
-				output_file = new FileWriter("src\\output.txt",false);
+				output_file = new FileWriter("src\\IntermediateTextFile.txt",false);
 				FileReader input_file=new FileReader("src\\input.txt");
 				BufferedReader bf=new BufferedReader(input_file);
-
 				given_text=bf.readLine();
 				input_text_val=given_text.split(":");
 			    text_data=input_text_val[1];
 			    key_value=bf.readLine();
 			    String []input_key_val=key_value.split(":");
 			    tempString=input_key_val[1];
-			    
-			    original_Text=text_data;
+			    setOriginal_Text(text_data);
 			    tempString=tempString.replace(" ", "");
-				
 			    text_data=text_data.replace(" ", "");
-				
 				byte[] key=hexStringToByteArray(tempString);
 				byte[] W=hexStringToByteArray(text_data);
-				S = new AlgorithmRC6().KeySchedule(key);
-					
+				S = new AlgorithmRC6().KeySchedule(key);		
 				byte[] encrypt=new AlgorithmRC6().encryption(W);
-				encrypted_text=byteArrayToHex(encrypt);
-				encrypted_text = encrypted_text.replaceAll("..", "$0 ");
+				String temp=byteArrayToHex(encrypt);
+				temp.replaceAll("..", "$0 ");
+				setEncrypted_text(temp);
 				output_to_text_file=new BufferedWriter(output_file);
 				output_to_text_file.write("ciphertext: "+ encrypted_text);
+				output_to_text_file.write("\nuserkey: "+tempString);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -319,11 +346,11 @@
 			FileWriter output_file;
 			try {
 			output_file = new FileWriter("src\\output.txt",false);
-			FileReader input_file=new FileReader("src\\input.txt");
+			FileReader input_file=new FileReader("src\\IntermediateTextFile.txt");
 			BufferedReader bf=new BufferedReader(input_file);
 			given_text=bf.readLine();
 			input_text_val=given_text.split(":");
-		    text_data=this.encrypted_text;
+		    text_data=getEncrypted_text();
 		    key_value=bf.readLine();
 		    String []input_key_val=key_value.split(":");
 		    tempString=input_key_val[1]; 
@@ -333,8 +360,9 @@
 			byte[] X=hexStringToByteArray(text_data);
 			S = new AlgorithmRC6().KeySchedule(key2);
 			byte[] decrypt=new AlgorithmRC6().decryption(X);
-			 decrypted_text=byteArrayToHex(decrypt);
-			decrypted_text = decrypted_text.replaceAll("..", "$0 "); 
+			String temp=byteArrayToHex(decrypt);
+			temp= temp.replaceAll("..", "$0 "); 
+			setDecrypted_text(temp);
 			output_to_text_file=new BufferedWriter(output_file);
 			output_to_text_file.write("plaintext: "+ decrypted_text);
 			}catch (IOException e) {
